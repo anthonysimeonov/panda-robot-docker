@@ -1,3 +1,6 @@
+#!/bin/bash
+set -ef -o pipefail
+
 CONTAINER_NAME="panda_robot_container-user"
 if [ -z $1 ]
 then 

@@ -127,6 +127,9 @@ RUN echo -e "@realtime soft rtprio 99\n@realtime soft priority 99\n@realtime sof
 RUN echo -e "@realtime soft rtprio 99\n@realtime soft priority 99\n@realtime soft memlock 102400\n@realtime hard rtprio 99\n@realtime hard priority 99\n@realtime hard memlock 102400" >> /etc/security/limits.d/realtime.conf
 USER $USER_NAME
 
+# make sure we can source ROS with both our user and root user
+USER root
+RUN echo "source ${USER_HOME_DIR}/panda_ws/devel/setup.bash" >> /root/.bashrc
+USER $USER_NAME
 RUN echo "source ${USER_HOME_DIR}/panda_ws/devel/setup.bash" >> ${USER_HOME_DIR}/.bashrc
-RUN echo "source ${USER_HOME_DIR}/panda_ws/devel/setup.bash" >> ~/.bashrc
 ENTRYPOINT bash -c "/bin/bash"
