@@ -10,8 +10,10 @@ python docker_build.py \
 ```
 
 ### Run
+First you have to export the IP address of the Franka Robot. Then run the `docker run` command in the bash script.
 ```
-sh run_panda_robot_image.sh
+export FRANKA_ROBOT_IP=$FRANKA_ROBOT_IP
+bash run_panda_robot_image.sh
 ```
 
 After running the container, ensure you can use GUI-based applications from the container. From outside the running container (i.e., in a new terminal):
