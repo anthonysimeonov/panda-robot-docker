@@ -114,8 +114,8 @@ RUN sudo apt install -y \
     ros-noetic-kdl-parser-py \
     ros-noetic-kdl-parser 
 
-# we need numpy-quaternion to use the franka ros interface
-RUN source ${USER_HOME_DIR}/environments/panda-ros/bin/activate && pip install numpy-quaternion
+# we need numpy-quaternion to use the franka ros interface, as well as pyrealsense2 
+RUN source ${USER_HOME_DIR}/environments/panda-ros/bin/activate && pip install numpy-quaternion pyrealsense2
 
 # change ownership of everything to our user
 RUN echo 'Group id' && echo ${USER_GID}
