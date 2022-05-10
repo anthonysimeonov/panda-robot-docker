@@ -10,7 +10,9 @@ RUN apt install sudo
 # create a non-root user
 RUN echo "user id: ${USER_ID}"
 RUN echo "user name: ${USER_NAME}"
-RUN useradd -m --no-log-init --system --uid ${USER_ID} ${USER_NAME} -g sudo
+RUN groupadd ${USER_NAME} && groupmod -g ${USER_GID} ${USER_NAME}
+RUN useradd -m --no-log-init --system --uid ${USER_ID} ${USER_NAME} -g ${USER_NAME}
+RUN usermod -a -G sudo ${USER_NAME}
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # running all build commands as the user who initiated this docker build
@@ -81,9 +83,10 @@ WORKDIR ${PANDA_WS}
 RUN wstool init src && \
     wstool merge -t src https://raw.githubusercontent.com/ros-planning/moveit/master/moveit.rosinstall && \
     wstool update -t src && \
-    rosdep install -y --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} && \
+    rosdep install -y --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -y --skip-keys libfranka && \
     source devel/setup.bash && catkin build
 
+# rosdep install -y --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} && \
 # make virtualenv
 WORKDIR ${USER_HOME_DIR}
 RUN mkdir environments && cd environments && virtualenv -p `which python3` --system-site-packages panda-ros
@@ -111,12 +114,12 @@ RUN sudo apt install -y \
     ros-noetic-kdl-parser-py \
     ros-noetic-kdl-parser 
 
-# we need numpy-quaternion to use the franka ros interface
-RUN source ${USER_HOME_DIR}/environments/panda-ros/bin/activate && pip install numpy-quaternion
+# we need numpy-quaternion to use the franka ros interface, as well as pyrealsense2 
+RUN source ${USER_HOME_DIR}/environments/panda-ros/bin/activate && pip install numpy-quaternion pyrealsense2
 
 # change ownership of everything to our user
 RUN echo 'Group id' && echo ${USER_GID}
-RUN sudo groupadd $USER_NAME && sudo groupmod -g $USER_GID $USER_NAME
+# RUN sudo groupadd $USER_NAME && sudo groupmod -g $USER_GID $USER_NAME
 RUN cd ${USER_HOME_DIR} && echo $(pwd) && sudo chown $USER_NAME:$USER_NAME -R .
 
 # create realtime group

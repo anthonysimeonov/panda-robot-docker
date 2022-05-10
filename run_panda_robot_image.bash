@@ -17,5 +17,6 @@ docker run --rm -it \
     --privileged \
     --cap-add=ALL \
     --env="FRANKA_ROBOT_IP=$FRANKA_ROBOT_IP" \
+    --env="ROS_IP=$ROS_IP" \
     --name=panda_robot_container-user franka-ros-ubuntu-20-user:v0
 
