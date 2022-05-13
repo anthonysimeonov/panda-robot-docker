@@ -10,10 +10,11 @@ python docker_build.py \
 ```
 
 ### Run
-First you have to export the IP address of the Franka Robot. Then run the `docker run` command in the bash script.
+First you have to export the IP address of the Franka Robot. You should also export the IP address of the host machine for whatever local network ROS will be run on (i.e., if you have another locally connected computer sending commands to the robot). Then run the `docker run` command in the bash script.
 ```
 export FRANKA_ROBOT_IP=$FRANKA_ROBOT_IP
-bash run_panda_robot_image.sh
+export ROS_IP=$ROS_IP
+bash run_panda_robot_image_gui_options.bash
 ```
 
 After running the container, ensure you can use GUI-based applications from the container. From outside the running container (i.e., in a new terminal):
@@ -34,4 +35,16 @@ roscore
 
 # in another termainl inside the container (i.e., in a new tmux window/pane)
 rviz
+```
+
+### Launch panda interface
+First, join the container as root
+```
+# from the host machine
+cd /path/to/panda-robot-docker
+bash join_cont.bash root
+```
+Then, launch the driver node (see [here](https://github.com/rachelholladay/franka_ros_interface) for more info)
+```
+roslaunch franka_interface interface.launch
 ```
