@@ -1,0 +1,2 @@
+export FRANKA_ROBOT_IP=172.16.0.2
+export ROS_IP=173.16.0.1
