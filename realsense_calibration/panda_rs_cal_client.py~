@@ -214,7 +214,7 @@ def main(args):
                         image = img_sub.get_rgb_img(block=True)
                         depth_image = img_sub.get_rgb_img()
                         now = time.time()
-                        #print(image)
+                        print(image)
                         if image is not None:
                             cv2.imwrite(osp.join(save_dir, f'{i}_{now}_rgb.png'), image)
                             cv2.imwrite(osp.join(save_dir, f'{i}_{now}_depth.png'), depth_image)
@@ -484,13 +484,13 @@ def main(args):
                 with open(calib_file_path, 'w') as fp:
                     json.dump(ret, fp, indent=2)    
 
-                # tf_str_list = [str(val) for val in trans] + [str(val) for val in quat]
-                # tf_str = ', '.join(tf_str_list)
-                # new_str_line = '  <node pkg="tf" type="static_transform_publisher" name="%s_broadcaster" args="%s panda_link0 %s_color_optical_frame 100" />\n' % (cam, tf_str, cam)
-                # tf_launch_file_str += new_str_line
-                # open(osp.join(tf_launch_file_dir, 'rs_static_tf_%s.launch' % cam), 'w').write('<launch>\n%s</launch>' % new_str_line)
-        # tf_launch_file_str += '</launch>'
-        # open(osp.join(tf_launch_file_dir, 'rs_static_tf.launch'), 'w').write(tf_launch_file_str)
+                tf_str_list = [str(val) for val in trans] + [str(val) for val in quat]
+                tf_str = ', '.join(tf_str_list)
+                new_str_line = '  <node pkg="tf" type="static_transform_publisher" name="%s_broadcaster" args="%s panda_link0 %s_color_optical_frame 100" />\n' % (cam, tf_str, cam)
+                tf_launch_file_str += new_str_line
+                open(osp.join(tf_launch_file_dir, 'rs_static_tf_%s.launch' % cam), 'w').write('<launch>\n%s</launch>' % new_str_line)
+        tf_launch_file_str += '</launch>'
+        open(osp.join(tf_launch_file_dir, 'rs_static_tf.launch'), 'w').write(tf_launch_file_str)
         done = True
         break
 
